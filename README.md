@@ -30,7 +30,7 @@ To make the reaction test unpredictable, I used an unconnected analog pin to gen
 
 ## Section B: Mini Projects
 
-### Mini Project 1: Smart Distance Alert System (Posture Monitor)
+### Mini Project 1: Smart Posture Monitor
 Tinkercad Link: https://www.tinkercad.com/things/3YAXtDE6Ja5-mini-project-1?sharecode=Xn1sH3zeLUuQjDthQNbKvtxwpmOw46znP8qcvWxKOic
 
 Code File: Section B/Project_Smart_Distance_Alert_System.cpp
@@ -41,7 +41,7 @@ I built an anti-slouch posture monitor because bad posture is a huge problem for
 Components used:
 I used an ultrasonic sensor to mathematically measure the distance, a vibration motor for physical feedback, and an RGB LED to show the safe or alert status visually.
 
-### Mini Project 2: Smart Auto-Night Lamp & Tilt-Snooze Alarm
+### Mini Project 2: Smart Tilt-Snooze Alarm
 Tinkercad Link: https://www.tinkercad.com/things/98DDkzSdMAs-mini-project-2?sharecode=XATJ_OzKVdsHB0UijKHOZMVUVvFuE4rh_WmtH8f-jBg
 
 Code File: Section B/Project_Smart_Alarm_System.cpp
