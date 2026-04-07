@@ -36,10 +36,7 @@ Tinkercad Link: https://www.tinkercad.com/things/3YAXtDE6Ja5-mini-project-1?shar
 Code File: Section B/Project_Smart_Distance_Alert_System.cpp
 
 What the project does and why I chose it:
-I built an anti-slouch posture monitor using an ultrasonic sensor. I picked this idea because bad posture is a huge problem for students studying for hours, and I wanted to make something practically useful. If a person gets closer than 30cm to the screen, the system waits to see if they stay there. It only alerts them if they slouch for too long.
-
-Challenges I faced:
-The hardest part was making sure the alarm doesn't just go off immediately when someone leans in for just a quick second. I wanted to add a 5-second countdown rule. I couldn't use the delay tool because it would completely freeze the sensor from taking new distance readings. I solved this by using millis to track how long they have been slouching continuously, checking distance the whole time, and only turning on the red LED and vibration motor if they crossed the 5-second mark without correcting their posture.
+I built an anti-slouch posture monitor because bad posture is a huge problem for students studying for hours, and I wanted to make something practically useful. If a person gets closer than 30cm to the screen, the system waits to see if they stay there. It only alerts them if they slouch for too long. I used millis instead of the delay tool to achieve this countdown, because an actual delay would completely freeze the sensor from taking new distance readings. By using millis, I could track how long they have been slouching continuously while still checking the distance the whole time.
 
 Components used:
 I used an ultrasonic sensor to mathematically measure the distance, a vibration motor for physical feedback, and an RGB LED to show the safe or alert status visually.
@@ -50,10 +47,7 @@ Tinkercad Link: https://www.tinkercad.com/things/98DDkzSdMAs-mini-project-2?shar
 Code File: Section B/Project_Smart_Alarm_System.cpp
 
 What the project does and why I chose it:
-This project is an alarm setup that reacts to room light levels and physical orientation. It uses an LDR to trigger a loud buzzer when the sunlight goes above a certain level. But if you tilt the device over, the alarm stops. You can also press a push button to snooze it for 10 seconds. I chose this because it was a fun challenge to combine light sensors with physical tilt changes into one device idea.
-
-Challenges I faced:
-Just like the first project, the main challenge was writing the code for the 10-second snooze button delay without freezing the rest of the board. An actual delay command would stop the LDR and tilt sensor from working during the snooze time. I got around this by keeping track of the snooze start time with millis and using a true or false checking flag to temporarily bypass the buzzer while the snooze timer is active.
+This project is an alarm setup that reacts to room light levels and physical orientation. It uses an LDR to trigger a loud buzzer when the sunlight goes above a certain level. But if you tilt the device over, the alarm stops. You can also press a push button to snooze it for 10 seconds. I chose this because it was a fun challenge to combine light sensors with physical tilt changes into one device idea. To handle the 10-second snooze, I used millis instead of an actual delay command because freezing the board would stop the LDR and tilt sensor from working during the snooze time. Using millis let me simply bypass the buzzer while keeping all the sensors running.
 
 Components used:
 I used an LDR photoresistor to detect light intensity, a tilt sensor to check if the alarm has been physically knocked over, a piezo buzzer for the alarm sound, and a basic pushbutton for the snooze feature.
