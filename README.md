@@ -1,6 +1,6 @@
 # MaRS Electronics Subsystem Task 1 Submission
 
-Welcome to my submission repository for the MaRS Robotics Club Electronics Subsystem. This repository contains the source code (`.cpp` files) for Section A and Section B, along with this integrated documentation providing links to my Tinkercad simulations and explanations of the functionality.
+Welcome to my submission repository for the MaRS Robotics Club Electronics Subsystem. This repository contains the source code (`.cpp` files) for Section A and Section B, along with this integrated documentation providing links to my Tinkercad simulations and detailed technical explanations of the internal logic and functionality.
 
 ---
 
@@ -10,19 +10,21 @@ Welcome to my submission repository for the MaRS Robotics Club Electronics Subsy
 * **Tinkercad Link:** [View Simulation](https://www.tinkercad.com/things/4pJtiBDvWCs-marstask1q1?sharecode=6CN3JmCLxz7X5FDFpi37JVyCDmtXrguMyn8fW0adKaQ)
 * **Code File:** `Question_1_Blinking_LED.cpp`
 * **Code Logic Explanation:**
-In this circuit, three LEDs blink simultaneously but at completely independent intervals (500ms, 1000ms, and 1500ms) without blocking one another. This is achieved by using the non-blocking `millis()` function. The code constantly evaluates the elapsed time for each LED (`currtime - lasttime_x`) against its assigned interval. When the threshold is met, the LED state toggles and the corresponding `lasttime` variable is updated.
+In this circuit, I configured three separate LEDs to blink independently at intervals of 500ms, 1000ms, and 1500ms. If I had used the standard `delay()` function, the entire script would pause, breaking the independent timing sequences because `delay()` blocks the microcontroller from executing other tasks. Instead, I utilized the core timer function, `millis()`. By constantly capturing the elapsed system time (`unsigned long int currtime = millis();`) and finding the delta against each LED's previous stamp (`currtime - lasttime_x`), I effectively created three independent, non-blocking asynchronous timers. 
 
 ### Question 2: Controlling RGB LED and LED Blinking Speed
 * **Tinkercad Link:** [View Simulation](https://www.tinkercad.com/things/bNPMODNMjM8-marstask1q2?sharecode=MuuJMeQ3s6-Y5WsDwsCzt0CIS_KUQZPRbSrQUkVrKhQ)
 * **Code File:** `Question_2_RGB_LED_Potentiometer.cpp`
 * **Code Logic Explanation:**
-This circuit connects a potentiometer to an analog input (A0). Based on the analog value read (ranging from 0 to 1023), the RGB LED's color shifts between distinct color ranges (Red for <341, Green for 341-681, Blue for >=682). Simultaneously, the blinking interval of a secondary LED is dynamically controlled by using the raw potentiometer value directly as the threshold for the `millis()` comparison, making it blink faster as the value decreases and slower as it increases.
+This task effectively demonstrates the bridging of Analog-to-Digital Conversion (ADC) and Pulse Width Modulation (PWM). A potentiometer acts as a variable voltage divider connected to the `A0` pin. The Arduino reads this voltage and converts it to an integer from `0` to `1023`. 
+I split this range into three equal sectors (0-340, 341-681, 682-1023). Using nested conditional statements, the code checks the sector and triggers `analogWrite()` (PWM) to force the RGB LED into distinct Solid Red, Solid Green, or Solid Blue states. At the same time, this raw ADC reading value (`0-1023`) is dynamically fed right into a `millis()` timer logic gate. Because the value represents milliseconds, twisting the potentiometer simultaneously dictates the exact blinking delay of a secondary standard LED—making it visibly flicker faster or slower based on the knob's position.
 
 ### Question 3: Reaction Time Tester
 * **Tinkercad Link:** [View Simulation](https://www.tinkercad.com/things/f9fh0nv4hLT-marstask1q3?sharecode=p-kofUQVJRi2i6KelF4zW2EkXY4dW5L1gZJPH4vyypM)
 * **Code File:** `Question_3_Reaction_Time_Tester.cpp`
 * **Sensor Math & Logic Explanation:**
-The system generates a random initial delay (between 2-5 seconds). Once this time elapses, the LED illuminates, and `start_time` is recorded. When the user reacts and pushes the tactile switch (which is configured as an `INPUT_PULLUP`), the current time is grabbed. The reaction mathematics is simply `reaction_time = curr_time - start_time;` where `curr_time` is sampled the instant the button state reads `HIGH`. The result is then broadcasted to the Serial Monitor in milliseconds.
+The tester required unpredictability to genuinely assess a user's reaction. To achieve random timing, I seeded the random number generator `randomSeed(analogRead(A0))` using the ambient electronic noise of an unconnected analog pin. A random baseline delay between 2,000 to 5,000 milliseconds is generated. 
+The tactile button uses the internal pull-up resistor (`INPUT_PULLUP`). When the LED abruptly triggers, `start_time` is locked. When the user successfully interrupts the circuit by pressing the button (`HIGH`), `curr_time` is sampled. The core math applied is essentially measuring the delta: `reaction_time = curr_time - start_time`. The result is pushed to the Serial port in milliseconds, providing an instant score.
 
 ---
 
@@ -31,24 +33,34 @@ The system generates a random initial delay (between 2-5 seconds). Once this tim
 ### Mini Project 1: Smart Distance Alert System (Anti-Slouch/Posture Monitor)
 * **Tinkercad Link:** [View Simulation](https://www.tinkercad.com/things/3YAXtDE6Ja5-mini-project-1?sharecode=Xn1sH3zeLUuQjDthQNbKvtxwpmOw46znP8qcvWxKOic)
 * **Code File:** `Project_Smart_Distance_Alert_System.cpp`
+
 * **What the project does and why I chose it:**
-This project actively monitors distance via an ultrasonic sensor and serves as an interactive posture or proximity alarm system. If an object stays inappropriately close (under 30cm) for an extended duration (over 5 seconds without moving back), an alarm trigger physically actuates a vibration motor and dynamically cycles an RGB LED from Cyan to Red. I chose this concept because it perfectly highlights the usage of internal state timers to prevent false positives while remaining continuously vigilant.
+This project continuously broadcasts ultrasonic sound pulses to measure physical distance and dynamically alerts users when they sit unhealthily close to their workspace/screen. I specifically chose to build an Anti-Slouch monitor because it directly tackles a common real-world physiological hazard—poor desk posture—using highly accessible robotics principles. 
+Beyond simple distance tracking, I wanted the profound challenge of incorporating an **extended-duration threshold constraint**. Simply triggering an alarm the millisecond someone leans closely is annoying and leads to false positives. So, my goal was to make the system highly intelligent: it visually tracks your distance, but the alarm (vibrator and solid red LED) only initiates if you break the 30cm safety margin continuously for an unyielding 5-second timeframe without correcting your posture. 
+
 * **Components Used:**
-   - **Ultrasonic Sensor (HC-SR04):** Bounces acoustic pulses to calculate object distance.
-   - **Vibration Motor:** Acts as the tactile feedback mechanism when the time limit gets exceeded.
-   - **RGB LED:** Provides a visual status indicating safe (Cyan) versus alert (Red) conditions.
+   - **Ultrasonic Sensor (HC-SR04):** Operates on acoustic echoes to calculate exact distance metrics.
+   - **Vibration Motor / Actuator:** Acts as the physical tactile-feedback mechanism when posture goes out of bounds.
+   - **RGB LED:** Provides a gradient visual status (Cyan implies safe operation, Solid Red implies critical posture failure).
+
 * **Challenges faced and how I solved them:**
-One significant hurdle was accurately tracking out-of-bounds duration without freezing the loop using `delay()`. To fix this, I successfully implemented a state machine mapping time differences using `millis()`. This allows the ultrasonic sensor to rapidly scan distances while simultaneously monitoring a 5-second countdown violation.
+The most significant hurdle was mapping the 5-second timer without breaking the loop execution. Because the `HC-SR04` ultrasonic sensor needs to constantly poll the current distance multiple times a second, applying a simplistic `delay(5000)` would freeze the entire sensor network, leaving the microcontroller completely "blind". To resolve this, I engineered a logic state machine tied directly to `millis()`. When `distance < 30` drops true for the very first time, a boolean `isSlouching` flags `true` and records a specific timestamp `slouchStartTime`. Until `millis() - slouchStartTime > 5000` evaluates to true, the sensor is completely free to keep tracking user movement and instantly abort the timeout if the user steps back (resetting `isSlouching = false`).
+
+---
 
 ### Mini Project 2: Smart Auto-Night Lamp & Tilt-Snooze Alarm
 * **Tinkercad Link:** [View Simulation](https://www.tinkercad.com/things/98DDkzSdMAs-mini-project-2?sharecode=XATJ_OzKVdsHB0UijKHOZMVUVvFuE4rh_WmtH8f-jBg)
 * **Code File:** `Project_Smart_Alarm_System.cpp`
+
 * **What the project does and why I chose it:**
-This circuit leverages ambient light detection combined with physical interaction. When ambient light shoots above a specific threshold and the system tilt orientation is undisturbed, a buzzer alarm sequence activates. The built-in push-button functions as a 10-second mute/snooze feature, briefly stalling the cycle. I chose this setup because it cleverly combines an environmental sensor with an orientation-based fail-safe.
+This circuit leverages advanced dual-sensor environmental detection combined with direct physical interaction. When the ambient room light shoots above a calibrated threshold, and the main system chassis' orientation remains undisturbed (untilted), an aggressive buzzer sequences upward. By physically depressing the tactile 'snooze' button, the system goes dormant for exactly 10 seconds.
+I specifically chose this project because it simulates the architecture of a complete, premium consumer product. I envisioned an alarm clock that functions via environmental factors—sounding off when the sun shines through the window (increasing the localized LDR values), but turning off completely and instantly if the groggy user accidentally knocks it over on their bedside table (triggering the tilt sensor). This fuses audio-feedback protocols, physical state-disruption, and environmental baseline thresholds entirely into one unified framework. 
+
 * **Components Used:**
-   - **LDR (Photoresistor):** Senses the intensity of environmental light.
-   - **Tilt Sensor:** Provides a conditional constraint for the alarm behavior—detecting physical orientation.
-   - **Piezo Buzzer:** Serves as the auditory alarm signal.
-   - **Pushbutton:** Allows the user to interrupt the process using the programmed snooze state.
+   - **LDR (Photoresistor):** Sensitively measures the intensity of environmental luminance dynamically.
+   - **Tilt Sensor / Orientation Switch:** A physical restraint ensuring the alarm acts contextually depending on vertical orientation.
+   - **Piezoelectric Buzzer:** Serves as the auditory wake-up sequence mechanism.
+   - **Pushbutton:** Grants explicit user override via a programmed electronic 'snooze' state.
+
 * **Challenges faced and how I solved them:**
-I encountered difficulty integrating the temporary 10-second "snooze" delay because a traditional `delay()` pause would interrupt the continuous monitoring of the tilt sensor and light levels. The solution was applying non-blocking `millis()` tracking wrapped around a distinct boolean variable (`isSnoozed`), permitting seamless transitions back to the sensing polling loop continuously.
+My primary challenge in this project came when implementing the 10-second mute/snooze feature. A hardcoded boolean or basic `delay(10000)` pause would once again fatally interrupt the crucial background polling of both the tilt parameters and the changing LDR values. By relying heavily on non-blocking chronological indexing via `snoozeTime = millis()`, I successfully bridged a temporary override around the entire buzzer logic block (`!isSnoozed`). This permits seamless transitionings in and out of the sensing subroutines flawlessly, irrespective of what the user is currently doing with the hardware.
