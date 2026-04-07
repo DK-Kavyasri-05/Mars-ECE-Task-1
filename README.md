@@ -14,6 +14,7 @@ In this circuit, I made three LEDs blink at different intervals (500ms, 1000ms, 
 
 ### Question 2: Controlling RGB LED and LED Blinking Speed
 Tinkercad Link: https://www.tinkercad.com/things/bNPMODNMjM8-marstask1q2?sharecode=MuuJMeQ3s6-Y5WsDwsCzt0CIS_KUQZPRbSrQUkVrKhQ
+
 Code File: Section A/Question_2_RGB_LED_Potentiometer.cpp
 
 How the circuit works:
@@ -21,6 +22,7 @@ I connected a potentiometer to an analog pin which gives readings from 0 to 1023
 
 ### Question 3: Reaction Time Tester
 Tinkercad Link: https://www.tinkercad.com/things/f9fh0nv4hLT-marstask1q3?sharecode=p-kofUQVJRi2i6KelF4zW2EkXY4dW5L1gZJPH4vyypM
+
 Code File: Section A/Question_3_Reaction_Time_Tester.cpp
 
 Sensor Math and Logic:
@@ -30,6 +32,7 @@ To make the reaction test unpredictable, I used an unconnected analog pin to gen
 
 ### Mini Project 1: Smart Distance Alert System (Posture Monitor)
 Tinkercad Link: https://www.tinkercad.com/things/3YAXtDE6Ja5-mini-project-1?sharecode=Xn1sH3zeLUuQjDthQNbKvtxwpmOw46znP8qcvWxKOic
+
 Code File: Section B/Project_Smart_Distance_Alert_System.cpp
 
 What the project does and why I chose it:
@@ -43,6 +46,7 @@ I used an ultrasonic sensor to mathematically measure the distance, a vibration 
 
 ### Mini Project 2: Smart Auto-Night Lamp & Tilt-Snooze Alarm
 Tinkercad Link: https://www.tinkercad.com/things/98DDkzSdMAs-mini-project-2?sharecode=XATJ_OzKVdsHB0UijKHOZMVUVvFuE4rh_WmtH8f-jBg
+
 Code File: Section B/Project_Smart_Alarm_System.cpp
 
 What the project does and why I chose it:
